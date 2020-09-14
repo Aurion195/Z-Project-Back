@@ -29,4 +29,13 @@ public interface IUserRepository extends JpaRepository<User, String> {
 	 */
 	@Query(value = "Select * from \"User\" u where u.identifiant = ?1 AND u.password = ?2", nativeQuery = true)
 	User findUserByIdentifiantAndPassword(String identifiant, String password);
+	
+	/**
+	 * Fonction permettant de vérifier si l'utilisateur est déjà présent dans la base de données
+	 * @param mail = mail de l'utilisateur ;
+	 * @return un user si l'utilisateur est déjà en base sinon il renvoie null
+	 */
+	@Query(value = "Select * from \"User\" u where u.mail = ?1",
+			nativeQuery = true)
+	User findExistUser(String mail);
 }

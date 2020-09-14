@@ -2,18 +2,11 @@ package com.thmathieu.zproject.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.websocket.server.PathParam;
-import javax.websocket.server.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sun.istack.NotNull;
@@ -86,9 +79,8 @@ public class UserService {
 											  @PathVariable(value = "password", required = true )@NotNull String password) {
 		try {
 			User userEntity = this.iUserRepository.findUserByIdentifiantAndPassword(identifiant, password);
-			UserDto userDto = this.mappingUserEntityToUserDto(userEntity);
 			
-			if(!userDto.equals(null)) {
+			if(!userEntity.equals(null)) {
 				return new ResponseEntity<>(true, HttpStatus.OK);
 			}
 		}
@@ -96,6 +88,25 @@ public class UserService {
 			System.out.println(e.getMessage());
 		}
 		
-		return new ResponseEntity<>(false, HttpStatus.NOT_FOUND) ;
+		return new ResponseEntity<>(false, HttpStatus.OK) ;
+	}
+	
+	@GetMapping(value = "/canUser/{mail}")
+	public ResponseEntity<Boolean> canSubscribe(@PathVariable(value = "mail", required = true)@NotNull String mail) {
+		try {
+			User userEntity = this.iUserRepository.findExistUser(mail) ;
+			if(userEntity == null) {
+				
+			}
+			
+			if(userEntity.equals(null)) {
+				return new ResponseEntity<>(true, HttpStatus.OK) ;
+			}
+		}
+		catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return new ResponseEntity<>(true, HttpStatus.OK) ;
 	}
 }
