@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.ResourceProperties.Content;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -109,4 +110,27 @@ public class UserService {
 		
 		return new ResponseEntity<>(true, HttpStatus.OK) ;
 	}
+	
+	@GetMapping(value = "/inscription/{identifiant}/{password}/{mail}")
+	public ResponseEntity<Boolean> inscription(@PathVariable(value = "identifiant")String identifiant, 
+											   @PathVariable(value = "password")String password,
+											   @PathVariable(value = "mail")String mail) {
+		try {
+			if(!this.iUserRepository.findExistUser(mail).equals(null)) {
+				return new ResponseEntity<>(false, HttpStatus.OK) ;
+			}
+			
+			this.iUserRepository.insertUser(identifiant, password, mail);
+			
+			if(this.iUserRepository.findExistUser(mail).equals(null)) {
+				return new ResponseEntity<>(false, HttpStatus.OK) ;
+			}
+		}
+		catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return new ResponseEntity<>(false, HttpStatus.OK) ;
+	}
+	
 }

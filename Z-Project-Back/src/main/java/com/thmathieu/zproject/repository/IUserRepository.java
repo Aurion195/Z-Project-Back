@@ -38,4 +38,14 @@ public interface IUserRepository extends JpaRepository<User, String> {
 	@Query(value = "Select * from \"User\" u where u.mail = ?1",
 			nativeQuery = true)
 	User findExistUser(String mail);
+	
+	/**
+	 * Permet d'inserer quelqu'un dans la base de données
+	 * @param identifiant = identifiant à inserer ;
+	 * @param password = password à inserer ;
+	 * @param mail = mail à insérer ;
+	 */
+	@Query(value = "INSERT INTO \"User\" (identifiant, password, mail) VALUES ("
+			+ ":identifiant, :password, :mail )", nativeQuery = true)
+	void insertUser(String identifiant, String password, String mail);
 }
